@@ -198,8 +198,8 @@ public final class Maze implements Iterable<Pair<Position, Cell>> {
 	@CheckReturnValue
 	public Pair<Position, Cell>[] flat() {
 		if (flatCache == null) {
-			@SuppressWarnings("unchecked")
-			Pair<Position, Cell>[] flatCache = new Pair[duration * width * height];
+			//noinspection unchecked
+			flatCache = new Pair[duration * width * height];
 			for (int t = 0; t < duration; t++) {
 				for (int x = 0; x < width; x++) {
 					for (int y = 0; y < height; y++) {
