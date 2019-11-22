@@ -1,12 +1,17 @@
 package noedit;
 
+import java.util.Arrays;
+import java.util.Iterator;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
+import java.util.stream.Stream;
 
 import javax.annotation.CheckReturnValue;
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import org.apache.commons.lang3.Validate;
+import org.apache.commons.lang3.tuple.Pair;
 import org.checkerframework.checker.index.qual.NonNegative;
 import org.checkerframework.checker.index.qual.Positive;
 
@@ -15,12 +20,13 @@ import static noedit.Cell.Wall;
 /**
  * A time-dependent maze.
  */
-public final class Maze {
+public final class Maze implements Iterable<Pair<Position, Cell>> {
 
 	@Positive public final int width;
 	@Positive public final int height;
 	@Positive public final int duration;
 	@Nonnull private final Cell[][][] data;
+	@Nullable private Pair<Position, Cell>[] flatCache = null;
 
 	public Maze(@Positive int duration, @Positive int width, @Positive int height) {
 		this.duration = duration;
@@ -109,21 +115,23 @@ public final class Maze {
 		Validate.isTrue(t < duration, "'t' cannot exceed duration");
 
 		StringBuilder text = new StringBuilder("step " + (t + 1) + " of " + duration + ":\n");
+		text.append("+");
 		for (int i = 0; i < width + 2; i++) {
-			text.append("█");
+			text.append("-");
 		}
-		text.append("\n");
+		text.append("+\n");
 		for (int y = 0; y < height; y++) {
-			text.append("█");
+			text.append("|");
 			for (int x = 0; x < width; x++) {
 				text.append(data[t][x][y].toString());
 			}
-			text.append("█\n");
+			text.append("|\n");
 		}
+		text.append("+");
 		for (int i = 0; i < width + 2; i++) {
-			text.append("█");
+			text.append("-");
 		}
-		text.append("\n");
+		text.append("+\n");
 		return text.toString();
 	}
 
@@ -184,5 +192,38 @@ public final class Maze {
 	@Override
 	public String toString() {
 		return "Maze[" + width + "x" + height + "x" + duration + "]";
+	}
+
+	@Nonnull
+	@CheckReturnValue
+	public Pair<Position, Cell>[] flat() {
+		if (flatCache == null) {
+			@SuppressWarnings("unchecked")
+			Pair<Position, Cell>[] flatCache = new Pair[duration * width * height];
+			for (int t = 0; t < duration; t++) {
+				for (int x = 0; x < width; x++) {
+					for (int y = 0; y < height; y++) {
+						int index = t * width * height + x * height + y;
+						Position pos = Position.at(t, x, y);
+						Cell cell = data[t][x][y];
+						flatCache[index] = Pair.of(pos, cell);
+					}
+				}
+			}
+		}
+		return flatCache;
+	}
+
+	@Nonnull
+	@CheckReturnValue
+	public Stream<Pair<Position, Cell>> stream() {
+		return Arrays.stream(flat());
+	}
+
+	@Nonnull
+	@CheckReturnValue
+	@Override
+	public Iterator<Pair<Position, Cell>> iterator() {
+		return stream().iterator();
 	}
 }
