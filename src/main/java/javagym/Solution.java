@@ -5,7 +5,6 @@ import java.util.Arrays;
 import javax.annotation.CheckReturnValue;
 import javax.annotation.Nonnull;
 
-import org.apache.commons.lang3.NotImplementedException;
 import org.apache.commons.lang3.Validate;
 
 import noedit.Maze;
@@ -19,6 +18,10 @@ import static noedit.Cell.Wall;
 
 public class Solution {
 
+    //TODO @mark: focus more on time holes
+    //TODO @mark: don't enter same place twice!
+    //TODO @mark: make sure all tests pass
+
     @Nonnull
     @CheckReturnValue
     public Path solve(@Nonnull Maze maze, @Nonnull Position initialPosition) {
@@ -26,9 +29,8 @@ public class Solution {
                 "Started inside a wall; this should never happen");
 
         // First find the exits.
-        //TODO @mark: probably just set max count to 20+
-        Position[] exits = findExits(maze, initialPosition, 5);
-        Validate.isTrue(exits.length > 0, "No exist, IT'S A TRAP!");
+        Position[] exits = findExits(maze, initialPosition, 16);
+        Validate.isTrue(exits.length > 0, "No exits, IT'S A TRAP!");
 
         // Create a priority queue of items to process.
         Queue queue = new Queue(exits);
@@ -37,8 +39,11 @@ public class Solution {
         VisitGrid grid = new VisitGrid(maze);
 
         // Kick off from the initial position.
-        queue.add(new PathBuilder(initialPosition));
+        // Pay attention that anything added to path must be 1) checked for exit and 2) marked as visited.
+        if (maze.get(initialPosition) == Exit)
+            return new PathBuilder(initialPosition).build();
         grid.mark(initialPosition);
+        queue.add(new PathBuilder(initialPosition));
 
         // Go through all the nodes until an exit is found.
         while (queue.isNotEmpty()) {
@@ -52,7 +57,8 @@ public class Solution {
             while (neighbours.length == 1) {
                 // Pay attention that anything added to path must be 1) checked for exit and 2) marked as visited.
                 path.add(neighbours[0]);
-                if (maze.get(neighbours[0]) == Exit) return path.build();
+                if (maze.get(neighbours[0]) == Exit)
+                    return path.build();
                 grid.mark(neighbours[0]);
                 neighbours = findExplorable(path.latest(), maze, grid);
             }
@@ -62,13 +68,14 @@ public class Solution {
                 PathBuilder newPath = path.clone();
                 // Pay attention that anything added to path must be 1) checked for exit and 2) marked as visited.
                 newPath.add(neighbour);
-                if (maze.get(neighbours[0]) == Exit) return path.build();
+                if (maze.get(neighbours[0]) == Exit)
+                    return newPath.build();
                 grid.mark(neighbours[0]);
                 queue.add(newPath);
             }
         }
 
-        throw new IllegalStateException("Sorry, I failed to find a solution");
+        throw new IllegalStateException("Sorry, I failed to find a solution, I thought I checked everything");
     }
 
     @Nonnull
