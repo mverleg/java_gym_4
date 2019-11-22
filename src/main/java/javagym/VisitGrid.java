@@ -23,10 +23,10 @@ public class VisitGrid {
 	}
 
 	public void mark(@Nonnull Position position) {
-		isVisited[duration][width][height] = true;
+		isVisited[position.t][position.x][position.y] = true;
 	}
 
 	public boolean visited(@Nonnull Position position) {
-		return isVisited[duration][width][height];
+		return isVisited[position.t][position.x][position.y];
 	}
 }

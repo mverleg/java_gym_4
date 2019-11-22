@@ -3,6 +3,7 @@ package javagym;
 import javax.annotation.Nonnull;
 
 import org.apache.commons.lang3.tuple.Pair;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import noedit.Cell;
@@ -571,14 +572,17 @@ public class SolutionTest {
         checkMazeSolution(puzzle.getLeft(), puzzle.getRight());
     }
 
+    @Disabled
     @Test
     void testPerformance() {
         double total = 0;
         for (int i = 0; i < 50; i++) {
+            System.out.println("perfect i = " + i);
             Pair<Maze, Position> puzzle = MazeGenerator.generate(246_800_000 + 111 * i, 5, 150, 0.0, 1);
             total += checkMazeSolution(puzzle.getLeft(), puzzle.getRight());
         }
         for (int i = 0; i < 100; i++) {
+            System.out.println("porous i = " + i);
             Pair<Maze, Position> puzzle = MazeGenerator.generate(135_780_000 + 111 * i, 6, 150, 0.10, 5);
             total += checkMazeSolution(puzzle.getLeft(), puzzle.getRight());
         }

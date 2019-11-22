@@ -50,34 +50,24 @@ public class Solution {
             // If there is only one (tunnel), follow it.
             Position[] neighbours = findExplorable(path.latest(), maze, grid);
             while (neighbours.length == 1) {
+                // Pay attention that anything added to path must be 1) checked for exit and 2) marked as visited.
                 path.add(neighbours[0]);
                 if (maze.get(neighbours[0]) == Exit) return path.build();
+                grid.mark(neighbours[0]);
                 neighbours = findExplorable(path.latest(), maze, grid);
             }
 
             // Add all the options (either a split, or a dead end).
             for (Position neighbour : neighbours) {
                 PathBuilder newPath = path.clone();
+                // Pay attention that anything added to path must be 1) checked for exit and 2) marked as visited.
                 newPath.add(neighbour);
                 if (maze.get(neighbours[0]) == Exit) return path.build();
+                grid.mark(neighbours[0]);
                 queue.add(newPath);
             }
         }
 
-//        System.out.println(maze.asStringAll());
-//        PathBuilder path = new PathBuilder(initialPosition);
-//        while (true) {
-//            Position leftPos = path.latest().left();
-//            Cell leftCell = maze.getOrElse(leftPos, Wall);
-//            if (leftCell == Wall) {
-//                // Let's just give up here.
-//                break;
-//            }
-//            path.left();
-//            if (leftCell == Exit) {
-//                break;
-//            }
-//        }
         throw new IllegalStateException("Sorry, I failed to find a solution");
     }
 
@@ -92,8 +82,8 @@ public class Solution {
                 position.up()
         };
         return Arrays.stream(neighbours)
+                .filter(neighbour -> maze.getOrElse(neighbour, Wall) != Wall)
                 .filter(neighbour -> !grid.visited(neighbour))
-                .filter(neighbour -> maze.getOrElse(position, Wall) != Wall)
                 .toArray(Position[]::new);
     }
 
