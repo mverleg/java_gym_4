@@ -37,11 +37,41 @@ public class SolutionTest {
     }
 
     @Test
+    void testShowPath() {
+        // There are no asserts, you get this one for free if you don't throw errors.
+        // It will plot the maze including the path that your algorithm took.
+        Pair<Maze, Position> puzzle = MazeGenerator.generate(55_555_555, 3, 25, 0.05, 2);
+        Maze maze = puzzle.getLeft();
+        Position initialPosition = puzzle.getRight();
+        Solution solution = new Solution();
+        Path path = solution.solve(maze, initialPosition);
+        String text = path.ontoMazeAsText(maze);
+        System.out.println(text);
+    }
+
+    @Test
     void testCompletesWithoutErrors() {
         // Hint: Just step to the left.
         checkMazeSolution(
                 Maze.fromString("# "),
                 Position.initial(1, 0)
+        );
+    }
+
+    @Test
+    void testStartOnExit() {
+        // Hint: Maybe the only exit is under your feet!
+        checkMazeSolution(
+                Maze.fromStrings(new String[]{
+                        "   \n" +
+                        " # \n" +
+                        "   \n",
+                        // next step
+                        "   \n" +
+                        "   \n" +
+                        "   \n",
+                }),
+                Position.initial(1, 1)
         );
     }
 

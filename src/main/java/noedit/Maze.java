@@ -22,9 +22,9 @@ import static noedit.Cell.Wall;
  */
 public final class Maze implements Iterable<Pair<Position, Cell>> {
 
+	@Positive public final int duration;
 	@Positive public final int width;
 	@Positive public final int height;
-	@Positive public final int duration;
 	@Nonnull private final Cell[][][] data;
 	@Nullable private Pair<Position, Cell>[] flatCache = null;
 

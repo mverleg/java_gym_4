@@ -1,6 +1,7 @@
 package noedit;
 
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -110,5 +111,59 @@ public final class Path {
 	@IntRange(from = 0)
 	public int size() {
 		return steps.size();
+	}
+
+
+	@Nonnull
+	@CheckReturnValue
+	public String ontoMazeAsText(@Nonnull Maze maze) {
+
+		// Determine the symbols and create a lookup map.
+		@SuppressWarnings("unchecked")
+		HashMap<Spatial, Character>[] stepLookup = new HashMap[maze.duration];
+		for (int t = 0; t < maze.duration; t++) {
+			stepLookup[t] = new HashMap<>();
+		}
+
+		stepLookup[steps.get(0).t].put(steps.get(0).spatial(), 'S');
+		for (int s = 1; s < steps.size() - 1; s++) {
+			Position prev = steps.get(s - 1);
+			Position current = steps.get(s);
+			char symbol = '?';
+			if (current.x > prev.x) {
+				symbol = '>';
+			}
+			if (current.x < prev.x) {
+				symbol = '<';
+			}
+			if (current.y < prev.y) {
+				symbol = '^';
+			}
+			if (current.y > prev.y) {
+				symbol = 'v';
+			}
+			if (current.t > prev.t) {
+				symbol = '%';
+			}
+			stepLookup[current.t].put(current.spatial(), symbol);
+		}
+
+		// Convert the map to string.
+		StringBuilder text = new StringBuilder();
+		for (int t = 0; t < maze.duration; t++) {
+			text.append("step ").append(t + 1).append(" of ").append(maze.duration).append(" (showing path):\n");
+			for (int y = 0; y < maze.height; y++) {
+				for (int x = 0; x < maze.width; x++) {
+					Character stepSymbol = stepLookup[t].get(Spatial.at(x, y));
+					if (stepSymbol != null) {
+						text.append(stepSymbol);
+					} else {
+						text.append(maze.get(t, x, y).toString());
+					}
+				}
+				text.append("\n");
+			}
+		}
+		return text.toString();
 	}
 }
