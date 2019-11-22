@@ -1,6 +1,5 @@
 package javagym;
 
-import java.util.Optional;
 import java.util.PriorityQueue;
 
 import javax.annotation.CheckReturnValue;
@@ -9,21 +8,22 @@ import javax.annotation.Nullable;
 
 import org.apache.commons.lang3.Validate;
 
+import noedit.PathBuilder;
 import noedit.Position;
 
 import static javagym.Util.smallestDist;
 
 /**
- * A queue that puts positions first that are closer to an exit.
+ * A queue that puts paths first end closer to an exit.
  */
 public final class Queue {
 
 	public static final class Node implements Comparable<Node> {
-		@Nonnull private final Position position;
+		@Nonnull private final PathBuilder path;
 		private final int smallestDistance;
 
-		public Node(@Nonnull Position position, int smallestDistance) {
-			this.position = position;
+		public Node(@Nonnull PathBuilder path, int smallestDistance) {
+			this.path = path;
 			this.smallestDistance = smallestDistance;
 		}
 
@@ -42,19 +42,23 @@ public final class Queue {
 		this.priorityQueue = new PriorityQueue<>();
 	}
 
-	public void add(@Nonnull Position position) {
-		int dist = smallestDist(position, targets);
-		Node node = new Node(position, dist);
+	public void add(@Nonnull PathBuilder path) {
+		int dist = smallestDist(path.latest(), targets);
+		Node node = new Node(path, dist);
 		priorityQueue.add(node);
 	}
 
 	@Nullable
 	@CheckReturnValue
-	public Position head() {
+	public PathBuilder head() {
 		Node node = priorityQueue.poll();
 		if (node == null) {
 			return null;
 		}
-		return node.position;
+		return node.path;
+	}
+
+	public boolean isNotEmpty() {
+		return !priorityQueue.isEmpty();
 	}
 }
