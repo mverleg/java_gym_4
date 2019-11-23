@@ -1,6 +1,8 @@
 package javagym;
 
 import java.util.PriorityQueue;
+import java.util.Queue;
+import java.util.concurrent.PriorityBlockingQueue;
 
 import javax.annotation.CheckReturnValue;
 import javax.annotation.Nonnull;
@@ -9,6 +11,7 @@ import javax.annotation.Nullable;
 import noedit.PathBuilder;
 import noedit.Position;
 
+import static javagym.Parameters.THREADING;
 import static javagym.Util.smallestDist;
 
 //TODO @mark: remove all syncrhonized if not parallel
@@ -36,20 +39,22 @@ public final class ClosestQueue implements PathQueue {
 	}
 
 	@Nonnull private final Position[] targets;
-	@Nonnull private final PriorityQueue<Node> priorityQueue;
+	@Nonnull private final Queue<Node> priorityQueue;
 
 	public ClosestQueue(@Nonnull Position[] targets) {
 		this.targets = targets;
-		this.priorityQueue = new PriorityQueue<>();
+		if (THREADING) {
+			this.priorityQueue = new PriorityBlockingQueue<>();
+		} else {
+			this.priorityQueue = new PriorityQueue<>();
+		}
 	}
 
 	@Override
 	public void add(@Nonnull PathBuilder path) {
 		int dist = smallestDist(path.latest(), targets);
 		Node node = new Node(path, dist);
-		synchronized (this) {
-			priorityQueue.add(node);
-		}
+		priorityQueue.add(node);
 	}
 
 	@Override
@@ -57,9 +62,7 @@ public final class ClosestQueue implements PathQueue {
 	@CheckReturnValue
 	public PathBuilder head() {
 		Node node;
-		synchronized (this) {
-			node = priorityQueue.poll();
-		}
+		node = priorityQueue.poll();
 		if (node == null) {
 			return null;
 		}

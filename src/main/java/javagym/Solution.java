@@ -3,7 +3,6 @@ package javagym;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
@@ -22,6 +21,7 @@ import noedit.Position;
 
 import static javagym.Parameters.CHOKEPOINT_LAYER_LIMIT;
 import static javagym.Parameters.EXIT_TRACK_LIMIT;
+import static javagym.Parameters.THREADING;
 import static javagym.Parameters.TUNNEL_FOLLOW_LENGTH;
 import static noedit.Cell.Exit;
 import static noedit.Cell.Wall;
@@ -29,12 +29,10 @@ import static noedit.Cell.Wall;
 public class Solution {
 
     @Nonnull
-    //TODO @mark: try half?
     private final int threadCount = Runtime.getRuntime().availableProcessors();
-    @Nonnull
-    private ExecutorService threadPool = Executors.newFixedThreadPool(threadCount);
+    @Nullable
+    private final ExecutorService threadPool = THREADING ? Executors.newFixedThreadPool(threadCount) : null;
 
-    //TODO @mark: threads?
     //TODO @mark: flamegraph
 
     @Nonnull
@@ -73,6 +71,18 @@ public class Solution {
         queue.add(new PathBuilder(initialPosition));
 
         // Go through all the nodes until an exit is found.
+        Path solutionPath;
+        if (THREADING) {
+            solutionPath = solveThreaded(maze, grid, queue);
+        } else {
+            solutionPath = work(maze, grid, queue);
+        }
+        return solutionPath;
+    }
+
+    private Path solveThreaded(@Nonnull Maze maze, @Nonnull VisitGrid grid, @Nonnull PathQueue queue) {
+        Validate.notNull(threadPool);
+
         @SuppressWarnings("unchecked")
         Future<Path>[] solutions = new Future[threadCount];
         for (int w = 0; w < threadCount; w++) {
@@ -89,8 +99,7 @@ public class Solution {
         } catch (Exception ex) {
             throw new IllegalArgumentException(ex);
         }
-
-        throw new IllegalStateException("Sorry, I failed to find a solution, I thought I checked everything");
+        return null;
     }
 
     //TODO @mark: make PathQueues thread-safe

@@ -104,5 +104,67 @@ int CHOKEPOINT_LAYER_LIMIT = 0;
 int TIME_WEIGHT = 120;
 
 =============
+(multithreading with locks)
+perfect took 4605.452 ms
+porous took 14505.539 ms
+total took 19110.991 ms
 
+int EXIT_TRACK_LIMIT = 16;
+int TUNNEL_FOLLOW_LENGTH = 16;
+int CHOKEPOINT_LAYER_LIMIT = 0;
+int TIME_WEIGHT = 120;
 
+=============
+(multithreading with blocking queue and syncrhonized layerqueue)
+perfect took 5623.308 ms
+porous took 14138.245 ms
+total took 19761.552 ms
+
+int EXIT_TRACK_LIMIT = 16;
+int TUNNEL_FOLLOW_LENGTH = 16;
+int CHOKEPOINT_LAYER_LIMIT = 0;
+int TIME_WEIGHT = 120;
+
+=============
+(multithreading with blocking queue and unlocked layerqueue)
+perfect took 4753.118 ms
+porous took 11624.216 ms
+total took 16377.334 ms
+** ONE FAILED TEST **
+
+int EXIT_TRACK_LIMIT = 16;
+int TUNNEL_FOLLOW_LENGTH = 16;
+int CHOKEPOINT_LAYER_LIMIT = 0;
+int TIME_WEIGHT = 120;
+
+=============
+(optional theading ON)
+perfect took 4898.854 ms
+porous took 15418.758 ms
+total took 20317.612 ms
+perfect took 5374.817 ms
+porous took 12999.486 ms
+total took 18374.303 ms
+
+boolean THREADING = false;
+int EXIT_TRACK_LIMIT = 16;
+int TUNNEL_FOLLOW_LENGTH = 16;
+int CHOKEPOINT_LAYER_LIMIT = 0;
+int TIME_WEIGHT = 120;
+
+=============
+(optional threading OFF)
+perfect took 4177.202 ms
+porous took 10820.524 ms
+total took 14997.726 ms
+(this should be the same as before, how did it get faster?)
+
+boolean THREADING = true;
+int EXIT_TRACK_LIMIT = 16;
+int TUNNEL_FOLLOW_LENGTH = 16;
+int CHOKEPOINT_LAYER_LIMIT = 0;
+int TIME_WEIGHT = 120;
+
+=============
+
+=============

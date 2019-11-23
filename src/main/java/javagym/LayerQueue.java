@@ -2,6 +2,7 @@ package javagym;
 
 import java.util.LinkedList;
 import java.util.Queue;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
 import javax.annotation.CheckReturnValue;
 import javax.annotation.Nonnull;
@@ -10,7 +11,7 @@ import javax.annotation.Nullable;
 import noedit.PathBuilder;
 import noedit.Position;
 
-//TODO @mark: remove all syncrhonized if not parallel
+import static javagym.Parameters.THREADING;
 
 /**
  * A FILO queue with a preference for later layers.
@@ -26,12 +27,16 @@ public final class LayerQueue implements PathQueue {
 		//noinspection unchecked
 		layerQueues = new Queue[layerCount];
 		for (int t = 0; t < layerCount; t++) {
-			layerQueues[t] = new LinkedList<>();
+			if (THREADING) {
+				layerQueues[t] = new ConcurrentLinkedQueue<>();
+			} else {
+				layerQueues[t] = new LinkedList<>();
+			}
 		}
 	}
 
 	@Override
-	synchronized public void add(@Nonnull PathBuilder path) {
+	public void add(@Nonnull PathBuilder path) {
 		Position pos = path.latest();
 		layerQueues[pos.t].add(path);
 		itemCount += 1;
@@ -40,7 +45,7 @@ public final class LayerQueue implements PathQueue {
 	@Override
 	@Nullable
 	@CheckReturnValue
-	synchronized public PathBuilder head() {
+	public PathBuilder head() {
 		for (int t = layerQueues.length - 1; t >= 0; t--) {
 			PathBuilder path = layerQueues[t].poll();
 			if (path != null) {
@@ -52,7 +57,7 @@ public final class LayerQueue implements PathQueue {
 	}
 
 	@Override
-	synchronized public boolean isNotEmpty() {
+	public boolean isNotEmpty() {
 		return itemCount > 0;
 	}
 }
