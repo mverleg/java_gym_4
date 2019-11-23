@@ -40,6 +40,12 @@ public class MarkSolutionTest {
             porousTotal += checkMazeSolution(puzzle.getLeft(), puzzle.getRight());
         }
         System.out.println(String.format("porous took %.3f ms", porousTotal));
-        System.out.println(String.format("total took %.3f ms", perfectTotal + porousTotal));
+        double openTotal = 0.0;
+        for (int i = 0; i < 100; i++) {
+            Pair<Maze, Position> puzzle = MazeGenerator.generateOpen(147_258_369 + 111 * i, 50, 150, 0.10);
+            openTotal += checkMazeSolution(puzzle.getLeft(), puzzle.getRight());
+        }
+        System.out.println(String.format("open took %.3f ms", openTotal));
+        System.out.println(String.format("total took %.3f ms", perfectTotal + porousTotal + openTotal));
     }
 }

@@ -166,8 +166,20 @@ int CHOKEPOINT_LAYER_LIMIT = 0;
 int TIME_WEIGHT = 120;
 
 =============
+(use euclidean instead of manhattan distance)
+perfect took 3880.176 ms
+porous took 10923.796 ms
+total took 14803.972 ms
+perfect took 4466.537 ms
+porous took 10647.872 ms
+total took 15114.409 ms
+(I feel like this directs a bit better, but in tight mazes, there's not much chance for that to pay off)
 
-
+boolean THREADING = false;
+int EXIT_TRACK_LIMIT = 16;
+int TUNNEL_FOLLOW_LENGTH = 16;
+int CHOKEPOINT_LAYER_LIMIT = 0;
+int TIME_WEIGHT = 120;
 
 =============
 =============
