@@ -3,10 +3,14 @@ package javagym;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Queue;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
 import javax.annotation.CheckReturnValue;
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.Validate;
@@ -24,11 +28,19 @@ import static noedit.Cell.Wall;
 
 public class Solution {
 
+    @Nonnull
+    //TODO @mark: try half?
+    private final int threadCount = Runtime.getRuntime().availableProcessors();
+    @Nonnull
+    private ExecutorService threadPool = Executors.newFixedThreadPool(threadCount);
+
+    //TODO @mark: threads?
     //TODO @mark: flamegraph
 
     @Nonnull
     @CheckReturnValue
     public Path solve(@Nonnull Maze maze, @Nonnull Position initialPosition) {
+
         Validate.isTrue(Wall != maze.get(initialPosition),
                 "Started inside a wall; this should never happen");
 
@@ -61,10 +73,39 @@ public class Solution {
         queue.add(new PathBuilder(initialPosition));
 
         // Go through all the nodes until an exit is found.
+        @SuppressWarnings("unchecked")
+        Future<Path>[] solutions = new Future[threadCount];
+        for (int w = 0; w < threadCount; w++) {
+            solutions[w] = threadPool.submit(() -> work(maze, grid, queue));
+        }
+        try {
+            for (int w = 0; w < threadCount; w++) {
+                Path solutionPath = null;
+                solutionPath = solutions[w].get();
+                if (solutionPath != null) {
+                    return solutionPath;
+                }
+            }
+        } catch (Exception ex) {
+            throw new IllegalArgumentException(ex);
+        }
+
+        throw new IllegalStateException("Sorry, I failed to find a solution, I thought I checked everything");
+    }
+
+    //TODO @mark: make PathQueues thread-safe
+    @Nullable
+    @CheckReturnValue
+    private Path work(@Nonnull Maze maze, @Nonnull VisitGrid grid, @Nonnull PathQueue queue) {
+
+        // Go through all the nodes until an exit is found.
         while (queue.isNotEmpty()) {
 
             PathBuilder path = queue.head();
-            assert path != null : "No more items to explore, even though no exit has been found";
+            if (path == null) {
+                // Probably some other thread finished the work.
+                return null;
+            }
 
             // Find which neighbours can be explored.
             // If there is only one (tunnel), follow it.
@@ -95,7 +136,7 @@ public class Solution {
             }
         }
 
-        throw new IllegalStateException("Sorry, I failed to find a solution, I thought I checked everything");
+        return null;
     }
 
     @Nonnull

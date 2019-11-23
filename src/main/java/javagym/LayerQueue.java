@@ -10,6 +10,8 @@ import javax.annotation.Nullable;
 import noedit.PathBuilder;
 import noedit.Position;
 
+//TODO @mark: remove all syncrhonized if not parallel
+
 /**
  * A FILO queue with a preference for later layers.
  *
@@ -29,7 +31,7 @@ public final class LayerQueue implements PathQueue {
 	}
 
 	@Override
-	public void add(@Nonnull PathBuilder path) {
+	synchronized public void add(@Nonnull PathBuilder path) {
 		Position pos = path.latest();
 		layerQueues[pos.t].add(path);
 		itemCount += 1;
@@ -38,7 +40,7 @@ public final class LayerQueue implements PathQueue {
 	@Override
 	@Nullable
 	@CheckReturnValue
-	public PathBuilder head() {
+	synchronized public PathBuilder head() {
 		for (int t = layerQueues.length - 1; t >= 0; t--) {
 			PathBuilder path = layerQueues[t].poll();
 			if (path != null) {
@@ -50,7 +52,7 @@ public final class LayerQueue implements PathQueue {
 	}
 
 	@Override
-	public boolean isNotEmpty() {
+	synchronized public boolean isNotEmpty() {
 		return itemCount > 0;
 	}
 }

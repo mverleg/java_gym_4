@@ -11,6 +11,8 @@ import noedit.Position;
 
 import static javagym.Util.smallestDist;
 
+//TODO @mark: remove all syncrhonized if not parallel
+
 /**
  * A queue that puts paths first end closer to an exit.
  *
@@ -45,14 +47,19 @@ public final class ClosestQueue implements PathQueue {
 	public void add(@Nonnull PathBuilder path) {
 		int dist = smallestDist(path.latest(), targets);
 		Node node = new Node(path, dist);
-		priorityQueue.add(node);
+		synchronized (this) {
+			priorityQueue.add(node);
+		}
 	}
 
 	@Override
 	@Nullable
 	@CheckReturnValue
 	public PathBuilder head() {
-		Node node = priorityQueue.poll();
+		Node node;
+		synchronized (this) {
+			node = priorityQueue.poll();
+		}
 		if (node == null) {
 			return null;
 		}

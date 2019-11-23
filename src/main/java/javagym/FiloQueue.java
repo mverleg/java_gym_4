@@ -13,6 +13,7 @@ import noedit.Position;
 /**
  * Simple FILO queue.
  */
+@Deprecated
 public final class FiloQueue implements PathQueue {
 
 	@Nonnull private final Queue<PathBuilder> layerQueues;
