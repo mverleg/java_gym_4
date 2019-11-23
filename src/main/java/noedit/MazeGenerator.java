@@ -108,6 +108,38 @@ public final class MazeGenerator {
 		);
 	}
 
+	/**
+	 * Generate a mostly-open 'maze' with random obstacles. Not guaranteed to be solvable.
+	 */
+	@Nonnull
+	@CheckReturnValue
+	public static Pair<Maze, Position> generateOpen(
+			int seed,
+			@Positive int duration,
+			@Positive int sideLength,
+			@Positive double obstacleFraction
+	) {
+		Random rand = new Random(seed);
+		Cell[][][] maze = new Cell[duration][sideLength][sideLength];
+		for (int t = 0; t < duration; t++) {
+			for (int x = 0; x < sideLength; x++) {
+				for (int y = 0; y < sideLength; y++) {
+					if (rand.nextDouble() > obstacleFraction) {
+						maze[t][x][y] = Open;
+					} else {
+						maze[t][x][y] = Wall;
+					}
+				}
+			}
+		}
+		maze[duration - 1][rand.nextInt(sideLength)][rand.nextInt(sideLength)] = Exit;
+		int initX = rand.nextInt(sideLength);
+		int initY = rand.nextInt(sideLength);
+		maze[0][initX][initY] = Open;
+		Position initialPos = Position.initial(initX, initY);
+		return Pair.of(new Maze(maze), initialPos);
+	}
+
 	@Nonnull
 	@CheckReturnValue
 	private static Cell[][] generateWallLayer(int width, int height) {

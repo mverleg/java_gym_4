@@ -793,6 +793,12 @@ public class SolutionTest {
     }
 
     @Test
+    void testGeneratedOpen010() {
+        Pair<Maze, Position> puzzle = MazeGenerator.generateOpen(112_233_445, 100, 200, 0.10);
+        checkMazeSolution(puzzle.getLeft(), puzzle.getRight());
+    }
+
+    @Test
     void testPerformanceV2() {
         // Hint: Do not run in debug mode!
         double perfectTotal = 0.0;

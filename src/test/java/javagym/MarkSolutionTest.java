@@ -5,11 +5,25 @@ import org.junit.jupiter.api.Test;
 
 import noedit.Maze;
 import noedit.MazeGenerator;
+import noedit.Path;
 import noedit.Position;
 
 import static javagym.SolutionTest.checkMazeSolution;
 
 public class MarkSolutionTest {
+
+    @Test
+    void testShowPath() {
+        // There are no asserts, you get this one for free if you don't throw errors.
+        // It will plot the maze including the path that your algorithm took.
+        Pair<Maze, Position> puzzle = MazeGenerator.generateOpen(55_555_555, 6, 100, 0.10);
+        Maze maze = puzzle.getLeft();
+        Position initialPosition = puzzle.getRight();
+        Solution solution = new Solution();
+        Path path = solution.solve(maze, initialPosition);
+        String text = path.ontoMazeAsText(maze);
+        System.out.println(text);
+    }
 
     @Test
     void testPerformanceMark() {

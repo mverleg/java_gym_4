@@ -64,7 +64,6 @@ public class Solution {
         // Kick off from the initial position.
         // Pay attention that anything added to path must be 1) checked for exit and 2) marked as visited.
         if (maze.get(initialPosition) == Exit) {
-            //System.out.println(grid.asText());
             return new PathBuilder(initialPosition).build();
         }
         grid.mark(initialPosition);
@@ -102,7 +101,6 @@ public class Solution {
         return null;
     }
 
-    //TODO @mark: make PathQueues thread-safe
     @Nullable
     @CheckReturnValue
     private Path work(@Nonnull Maze maze, @Nonnull VisitGrid grid, @Nonnull PathQueue queue) {
@@ -125,6 +123,7 @@ public class Solution {
                 // Pay attention that anything added to path must be 1) checked for exit and 2) marked as visited.
                 path.add(neighbour);
                 if (maze.get(neighbour) == Exit) {
+                    System.out.println(grid.asText());  //TODO @mark: TEMPORARY! REMOVE THIS!
                     return path.build();
                 }
                 grid.mark(neighbour);
@@ -138,6 +137,7 @@ public class Solution {
                 // Pay attention that anything added to path must be 1) checked for exit and 2) marked as visited.
                 newPath.add(neighbour);
                 if (maze.get(neighbour) == Exit) {
+                    System.out.println(grid.asText());  //TODO @mark: TEMPORARY! REMOVE THIS!
                     return newPath.build();
                 }
                 grid.mark(neighbour);
