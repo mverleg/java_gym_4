@@ -13,13 +13,13 @@ import noedit.PathBuilder;
 import noedit.Position;
 
 import static javagym.Util.dist;
+import static javagym.Util.smallestDist;
 import static noedit.Cell.Exit;
 import static noedit.Cell.Wall;
 
 public class Solution {
 
     //TODO @mark: focus more on time holes
-    //TODO @mark: don't enter same place twice!
 
     @Nonnull
     @CheckReturnValue
@@ -39,8 +39,10 @@ public class Solution {
 
         // Kick off from the initial position.
         // Pay attention that anything added to path must be 1) checked for exit and 2) marked as visited.
-        if (maze.get(initialPosition) == Exit)
-            return new PathBuilder(initialPosition).build();
+        if (maze.get(initialPosition) == Exit) {
+            System.out.println(grid.asText());
+            return new PathBuilder(initialPosition).build();  //TODO @mark: TEMPORARY! REMOVE THIS!
+        }
         grid.mark(initialPosition);
         queue.add(new PathBuilder(initialPosition));
 
@@ -57,8 +59,11 @@ public class Solution {
                 Position neighbour = neighbours[0];
                 // Pay attention that anything added to path must be 1) checked for exit and 2) marked as visited.
                 path.add(neighbour);
-                if (maze.get(neighbour) == Exit)
+                System.out.println(path.latest().t + ": tunnel: " + neighbour + " (" + smallestDist(neighbour, exits) + ")");  //TODO @mark: TEMPORARY! REMOVE THIS!
+                if (maze.get(neighbour) == Exit) {
+                    System.out.println(grid.asText());  //TODO @mark: TEMPORARY! REMOVE THIS!
                     return path.build();
+                }
                 grid.mark(neighbour);
                 neighbours = findExplorable(path.latest(), maze, grid);
             }
@@ -68,8 +73,11 @@ public class Solution {
                 PathBuilder newPath = path.clone();
                 // Pay attention that anything added to path must be 1) checked for exit and 2) marked as visited.
                 newPath.add(neighbour);
-                if (maze.get(neighbour) == Exit)
+                System.out.println(path.latest().t + ": corner: " + neighbour + " (" + smallestDist(neighbour, exits) + ")");  //TODO @mark: TEMPORARY! REMOVE THIS!
+                if (maze.get(neighbour) == Exit) {
+                    System.out.println(grid.asText());  //TODO @mark: TEMPORARY! REMOVE THIS!
                     return newPath.build();
+                }
                 grid.mark(neighbour);
                 queue.add(newPath);
             }

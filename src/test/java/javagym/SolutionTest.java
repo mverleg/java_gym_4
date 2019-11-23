@@ -507,39 +507,39 @@ public class SolutionTest {
                 "  * *  \n" +
                 "  ***  \n" +
                 "  *    \n" +
-                "  *    \n",
-                // next step
-                "    *  \n" +
-                "    *  \n" +
-                "*****  \n" +
-                "  * *  \n" +
-                "  *****\n" +
-                "       \n" +
-                "       \n",
-                // next step (clear out starting room)
-                "*****  \n" +
-                "*****  \n" +
-                "*****  \n" +
-                "  * *  \n" +
-                "  *****\n" +
-                "  *    \n" +
-                "  *    \n",
-                // next step
-                "    *  \n" +
-                "    *  \n" +
-                "  ***  \n" +
-                "  * *  \n" +
-                "  *****\n" +
-                "  *    \n" +
-                "  *    \n",
-                // next step
-                "   #*  \n" +
-                "   #*  \n" +
-                "*****  \n" +
-                "  * *  \n" +
-                "  *****\n" +
-                "  *    \n" +
-                "  *    \n",
+                "  *#   \n",
+//                // next step
+//                "    *  \n" +
+//                "    *  \n" +
+//                "*****  \n" +
+//                "  * *  \n" +
+//                "  *****\n" +
+//                "       \n" +
+//                "       \n",
+//                // next step (clear out starting room)
+//                "*****  \n" +
+//                "*****  \n" +
+//                "*****  \n" +
+//                "  * *  \n" +
+//                "  *****\n" +
+//                "  *    \n" +
+//                "  *    \n",
+//                // next step
+//                "    *  \n" +
+//                "    *  \n" +
+//                "  ***  \n" +
+//                "  * *  \n" +
+//                "  *****\n" +
+//                "  *    \n" +
+//                "  *    \n",
+//                // next step
+//                "   #*  \n" +
+//                "   #*  \n" +
+//                "*****  \n" +
+//                "  * *  \n" +
+//                "  *****\n" +
+//                "  *    \n" +
+//                "  *    \n",
         });
         Position initialPosition = Position.initial(0, 0);
         Solution solution = new Solution();

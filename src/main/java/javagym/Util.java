@@ -12,7 +12,7 @@ public class Util {
 	 * Manhattan distance, but can't go back in time, and time is weighted more heavily.
 	 */
 	public static int dist(@Nonnull Position fromPoint, @Nonnull Position targetPoint) {
-		if (targetPoint.t > fromPoint.t) {
+		if (targetPoint.t >= fromPoint.t) {
 			return Math.abs(targetPoint.x - fromPoint.x) +
 					Math.abs(targetPoint.y - fromPoint.y) +
 					80 * (targetPoint.t - fromPoint.t);

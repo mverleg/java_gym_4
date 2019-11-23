@@ -38,12 +38,12 @@ public class VisitGrid {
 		StringBuilder text = new StringBuilder();
 		for (int t = 0; t < duration; t++) {
 			text.append("Step ").append(t + 1).append(" of ").append(duration).append(" (visited grid)\n");
-			for (int x = 0; x < width; x++) {
-				for (int y = 0; y < height; y++) {
+			for (int y = 0; y < height; y++) {
+				for (int x = 0; x < width; x++) {
 					if (isVisited[t][x][y]) {
 						text.append("#");
 					} else {
-						text.append(" ");
+						text.append(".");
 					}
 				}
 				text.append("\n");
