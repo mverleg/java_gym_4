@@ -12,9 +12,7 @@ import noedit.Path;
 import noedit.PathBuilder;
 import noedit.Position;
 
-import static javagym.Util.costGridAsText;
 import static javagym.Util.dist;
-import static javagym.Util.smallestDist;
 import static noedit.Cell.Exit;
 import static noedit.Cell.Wall;
 
@@ -22,6 +20,7 @@ public class Solution {
 
     //TODO @mark: focus more on time holes
     //TODO @mark: flamegraph
+    //TODO @mark: don't follow tunnels too long
 
     @Nonnull
     @CheckReturnValue
@@ -34,8 +33,8 @@ public class Solution {
         Validate.isTrue(exits.length > 0, "No exits, IT'S A TRAP!");
 
         //TODO @mark: TEMPORARY! REMOVE THIS!
-        System.out.println(maze.asStringAll());
-        System.out.println(costGridAsText(maze, exits));
+        // System.out.println(maze.asStringAll());
+        // System.out.println(costGridAsText(maze, exits));
 
         // Create a priority queue of items to process.
         Queue queue = new Queue(exits);
@@ -46,8 +45,8 @@ public class Solution {
         // Kick off from the initial position.
         // Pay attention that anything added to path must be 1) checked for exit and 2) marked as visited.
         if (maze.get(initialPosition) == Exit) {
-            System.out.println(grid.asText());
-            return new PathBuilder(initialPosition).build();  //TODO @mark: TEMPORARY! REMOVE THIS!
+            //System.out.println(grid.asText());
+            return new PathBuilder(initialPosition).build();
         }
         grid.mark(initialPosition);
         queue.add(new PathBuilder(initialPosition));
@@ -57,7 +56,7 @@ public class Solution {
 
             PathBuilder path = queue.head();
             assert path != null: "No more items to explore, even though no exit has been found";
-            System.out.println("taking " + path.latest() + " cost " + smallestDist(path.latest(), exits));  //TODO @mark: TEMPORARY! REMOVE THIS!
+            // System.out.println("taking " + path.latest() + " cost " + smallestDist(path.latest(), exits));  //TODO @mark: TEMPORARY! REMOVE THIS!
 
             // Find which neighbours can be explored.
             // If there is only one (tunnel), follow it.
@@ -68,8 +67,8 @@ public class Solution {
                 path.add(neighbour);
                 // System.out.println(path.latest().t + ": tunnel: " + neighbour + " (" + smallestDist(neighbour, exits) + ")");  //TODO @mark: TEMPORARY! REMOVE THIS!
                 if (maze.get(neighbour) == Exit) {
-                    System.out.println(path.build().ontoMazeAsText(maze));  //TODO @mark: TEMPORARY! REMOVE THIS!
-                    System.out.println(grid.asText());  //TODO @mark: TEMPORARY! REMOVE THIS!
+                    // System.out.println(path.build().ontoMazeAsText(maze));  //TODO @mark: TEMPORARY! REMOVE THIS!
+                    // System.out.println(grid.asText());  //TODO @mark: TEMPORARY! REMOVE THIS!
                     return path.build();
                 }
                 grid.mark(neighbour);
@@ -83,8 +82,8 @@ public class Solution {
                 newPath.add(neighbour);
                 // System.out.println(path.latest().t + ": corner: " + neighbour + " (" + smallestDist(neighbour, exits) + ")");  //TODO @mark: TEMPORARY! REMOVE THIS!
                 if (maze.get(neighbour) == Exit) {
-                    System.out.println(newPath.build().ontoMazeAsText(maze));  //TODO @mark: TEMPORARY! REMOVE THIS!
-                    System.out.println(grid.asText());  //TODO @mark: TEMPORARY! REMOVE THIS!
+                    // System.out.println(newPath.build().ontoMazeAsText(maze));  //TODO @mark: TEMPORARY! REMOVE THIS!
+                    // System.out.println(grid.asText());  //TODO @mark: TEMPORARY! REMOVE THIS!
                     return newPath.build();
                 }
                 grid.mark(neighbour);
