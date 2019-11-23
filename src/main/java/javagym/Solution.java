@@ -20,7 +20,6 @@ public class Solution {
 
     //TODO @mark: focus more on time holes
     //TODO @mark: don't enter same place twice!
-    //TODO @mark: make sure all tests pass
 
     @Nonnull
     @CheckReturnValue
@@ -55,11 +54,12 @@ public class Solution {
             // If there is only one (tunnel), follow it.
             Position[] neighbours = findExplorable(path.latest(), maze, grid);
             while (neighbours.length == 1) {
+                Position neighbour = neighbours[0];
                 // Pay attention that anything added to path must be 1) checked for exit and 2) marked as visited.
-                path.add(neighbours[0]);
-                if (maze.get(neighbours[0]) == Exit)
+                path.add(neighbour);
+                if (maze.get(neighbour) == Exit)
                     return path.build();
-                grid.mark(neighbours[0]);
+                grid.mark(neighbour);
                 neighbours = findExplorable(path.latest(), maze, grid);
             }
 
@@ -68,9 +68,9 @@ public class Solution {
                 PathBuilder newPath = path.clone();
                 // Pay attention that anything added to path must be 1) checked for exit and 2) marked as visited.
                 newPath.add(neighbour);
-                if (maze.get(neighbours[0]) == Exit)
+                if (maze.get(neighbour) == Exit)
                     return newPath.build();
-                grid.mark(neighbours[0]);
+                grid.mark(neighbour);
                 queue.add(newPath);
             }
         }

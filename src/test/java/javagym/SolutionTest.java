@@ -483,7 +483,7 @@ public class SolutionTest {
     }
 
     @Test
-    void testTMP() {
+    void testTMP() { // from testBigMill
         Maze maze = Maze.fromStrings(new String[]{
                 "    *  \n" +
                 "    *  \n" +
