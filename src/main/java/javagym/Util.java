@@ -1,9 +1,11 @@
 package javagym;
 
+import javax.annotation.CheckReturnValue;
 import javax.annotation.Nonnull;
 
 import org.apache.commons.lang3.Validate;
 
+import noedit.Maze;
 import noedit.Position;
 
 public class Util {
@@ -31,5 +33,27 @@ public class Util {
 			}
 		}
 		return smallest;
+	}
+
+
+	@Nonnull
+	@CheckReturnValue
+	public static String costGridAsText(@Nonnull Maze maze, @Nonnull Position[] targetPoints) {
+		StringBuilder text = new StringBuilder();
+		for (int t = 0; t < maze.duration; t++) {
+			text.append("Step ").append(t + 1).append(" of ").append(maze.duration).append(" (cost grid)\n");
+			for (int y = 0; y < maze.height; y++) {
+				for (int x = 0; x < maze.width; x++) {
+					int dist = smallestDist(Position.at(t, x, y), targetPoints);
+					if (dist < 1000) {
+						text.append(String.format("%3d ", dist));
+					} else {
+						text.append("$$$ ");
+					}
+				}
+				text.append("\n");
+			}
+		}
+		return text.toString();
 	}
 }

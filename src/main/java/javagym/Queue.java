@@ -29,7 +29,7 @@ public final class Queue {
 
 		@Override
 		public int compareTo(@Nonnull Node other) {
-			return other.smallestDistance - this.smallestDistance;
+			return this.smallestDistance - other.smallestDistance;
 		}
 	}
 
