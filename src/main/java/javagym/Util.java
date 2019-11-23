@@ -3,10 +3,10 @@ package javagym;
 import javax.annotation.CheckReturnValue;
 import javax.annotation.Nonnull;
 
-import org.apache.commons.lang3.Validate;
-
 import noedit.Maze;
 import noedit.Position;
+
+import static javagym.Parameters.TIME_WEIGHT;
 
 public class Util {
 
@@ -17,14 +17,14 @@ public class Util {
 		if (targetPoint.t >= fromPoint.t) {
 			return Math.abs(targetPoint.x - fromPoint.x) +
 					Math.abs(targetPoint.y - fromPoint.y) +
-					80 * (targetPoint.t - fromPoint.t);
+					TIME_WEIGHT * (targetPoint.t - fromPoint.t);
 		} else {
 			return Integer.MAX_VALUE;
 		}
 	}
 
 	public static int smallestDist(@Nonnull Position fromPoint, @Nonnull Position[] targetPoints) {
-		Validate.isTrue(targetPoints.length > 0);
+		assert targetPoints.length > 0;
 		int smallest = Integer.MAX_VALUE;
 		for (Position target : targetPoints) {
 			int dist = dist(fromPoint, target);

@@ -10,6 +10,7 @@
     <option name="MAIN_CLASS_NAME" value="" />
     <option name="METHOD_NAME" value="" />
     <option name="TEST_OBJECT" value="package" />
+    <option name="VM_PARAMETERS" />
     <option name="PARAMETERS" value="" />
     <option name="TEST_SEARCH_SCOPE">
       <value defaultName="wholeProject" />

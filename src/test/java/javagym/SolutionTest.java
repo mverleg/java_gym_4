@@ -482,6 +482,14 @@ public class SolutionTest {
     }
 
     @Test
+    void testLotsOfExits() {
+        for (int i = 0; i < 100; i++) {
+            Pair<Maze, Position> puzzle = MazeGenerator.generate(123_456_111, 5, 300, 0.0, 300);
+            checkMazeSolution(puzzle.getLeft(), puzzle.getRight());
+        }
+    }
+
+    @Test
     void testGeneratedPerfect001() {
         Pair<Maze, Position> puzzle = MazeGenerator.generate(123_456_111, 1, 20, 0.0, 1);
         checkMazeSolution(puzzle.getLeft(), puzzle.getRight());

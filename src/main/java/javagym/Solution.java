@@ -15,14 +15,15 @@ import noedit.Path;
 import noedit.PathBuilder;
 import noedit.Position;
 
-import static javagym.Util.dist;
+import static javagym.Parameters.CHOKEPOINT_LAYER_LIMIT;
+import static javagym.Parameters.EXIT_TRACK_LIMIT;
+import static javagym.Parameters.TUNNEL_FOLLOW_LENGTH;
 import static noedit.Cell.Exit;
 import static noedit.Cell.Wall;
 
 public class Solution {
 
     //TODO @mark: flamegraph
-    //TODO @mark: if there are too many target points, it's better to ignore them alltogether, rather than take the first few
 
     @Nonnull
     @CheckReturnValue
@@ -30,15 +31,23 @@ public class Solution {
         Validate.isTrue(Wall != maze.get(initialPosition),
                 "Started inside a wall; this should never happen");
 
-        // First find the exits.
-        Position[] targets = ArrayUtils.addAll(
-                findExits(maze, initialPosition, 16),
-                findTimeChokePoints(maze, 3)
-        );
-        Validate.isTrue(targets.length > 0, "No exits, IT'S A TRAP!");
+        // First find the exits, if there aren't too many.
+        Position[] targets = new Position[0];
+        Position[] exits = findExits(maze, EXIT_TRACK_LIMIT + 1);
+        if (exits.length <= EXIT_TRACK_LIMIT) {
+            targets = ArrayUtils.addAll(
+                    exits,
+                    findTimeChokePoints(maze, CHOKEPOINT_LAYER_LIMIT)
+            );
+        }
 
         // Create a priority queue of items to process.
-        Queue queue = new Queue(targets);
+        PathQueue queue;
+        if (targets.length == 0) {
+            queue = new LayerQueue(maze.duration);
+        } else {
+            queue = new ClosestQueue(targets);
+        }
 
         // And create a grid of visited cells.
         VisitGrid grid = new VisitGrid(maze);
@@ -62,7 +71,7 @@ public class Solution {
             // If there is only one (tunnel), follow it.
             Position[] neighbours = findExplorable(path.latest(), maze, grid);
             int tunnelSteps = 0;
-            while (tunnelSteps < 15 && neighbours.length == 1) {
+            while (tunnelSteps < TUNNEL_FOLLOW_LENGTH && neighbours.length == 1) {
                 Position neighbour = neighbours[0];
                 // Pay attention that anything added to path must be 1) checked for exit and 2) marked as visited.
                 path.add(neighbour);
@@ -149,11 +158,10 @@ public class Solution {
     @Nonnull
     @CheckReturnValue
     @SuppressWarnings("SameParameterValue")
-    private Position[] findExits(@Nonnull Maze maze, @Nonnull Position initialPosition, int maxCount) {
+    private Position[] findExits(@Nonnull Maze maze, int maxCount) {
         return maze.stream()
                 .filter(cell -> cell.getRight() == Exit)
                 .map(cell -> cell.getLeft())
-                .sorted((pos1, pos2) -> dist(initialPosition, pos2) - dist(initialPosition, pos1))
                 .limit(maxCount)
                 .toArray(Position[]::new);
     }

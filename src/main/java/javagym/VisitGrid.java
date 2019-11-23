@@ -7,7 +7,7 @@ import noedit.Maze;
 import noedit.Position;
 
 /**
- * Tracks cells that are already visited or are in the {@link Queue} (which counts as visited).
+ * Tracks cells that are already visited or are in the {@link ClosestQueue} (which counts as visited).
  */
 public class VisitGrid {
 
