@@ -3,6 +3,7 @@ package javagym;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Queue;
 
 import javax.annotation.CheckReturnValue;
 import javax.annotation.Nonnull;
@@ -35,10 +36,8 @@ public class Solution {
         Position[] targets = new Position[0];
         Position[] exits = findExits(maze, EXIT_TRACK_LIMIT + 1);
         if (exits.length <= EXIT_TRACK_LIMIT) {
-            targets = ArrayUtils.addAll(
-                    exits,
-                    findTimeChokePoints(maze, CHOKEPOINT_LAYER_LIMIT)
-            );
+            Position[] chokepoints = CHOKEPOINT_LAYER_LIMIT > 0 ? findTimeChokePoints(maze, CHOKEPOINT_LAYER_LIMIT) : new Position[0];
+            targets = ArrayUtils.addAll(exits, chokepoints);
         }
 
         // Create a priority queue of items to process.

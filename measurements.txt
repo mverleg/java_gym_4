@@ -1,0 +1,108 @@
+
+perfect took 7551.467 ms
+porous took 13779.798 ms
+total took 21331.265 ms
+
+int EXIT_TRACK_LIMIT = 16;
+int TUNNEL_FOLLOW_LENGTH = 128;
+int CHOKEPOINT_LAYER_LIMIT = 3;
+int TIME_WEIGHT = 80;
+
+=============
+perfect took 7765.523 ms
+porous took 13925.100 ms
+total took 21690.623 ms
+
+int EXIT_TRACK_LIMIT = 16;
+int TUNNEL_FOLLOW_LENGTH = 4;
+int CHOKEPOINT_LAYER_LIMIT = 3;
+int TIME_WEIGHT = 80;
+
+=============
+perfect took 5884.423 ms
+porous took 13822.428 ms
+total took 19706.851 ms
+perfect took 5759.092 ms
+porous took 14173.412 ms
+total took 19932.504 ms
+
+int EXIT_TRACK_LIMIT = 16;
+int TUNNEL_FOLLOW_LENGTH = 16;
+int CHOKEPOINT_LAYER_LIMIT = 0;
+int TIME_WEIGHT = 80;
+
+=============
+perfect took 7344.364 ms
+porous took 12748.055 ms
+total took 20092.419 ms
+
+int EXIT_TRACK_LIMIT = 16;
+int TUNNEL_FOLLOW_LENGTH = 16;
+int CHOKEPOINT_LAYER_LIMIT = 10;
+int TIME_WEIGHT = 80;
+
+=============
+perfect took 8214.633 ms
+porous took 13391.640 ms
+total took 21606.272 ms
+
+int EXIT_TRACK_LIMIT = 16;
+int TUNNEL_FOLLOW_LENGTH = 16;
+int CHOKEPOINT_LAYER_LIMIT = 10;
+int TIME_WEIGHT = 1;
+
+=============
+perfect took 7172.184 ms
+porous took 14030.068 ms
+total took 21202.252 ms
+
+int EXIT_TRACK_LIMIT = 16;
+int TUNNEL_FOLLOW_LENGTH = 16;
+int CHOKEPOINT_LAYER_LIMIT = 10;
+int TIME_WEIGHT = 120;
+
+=============
+(with chokepoint search disabled when 0)
+perfect took 4963.652 ms
+porous took 13779.034 ms
+total took 18742.686 ms
+perfect took 5093.683 ms
+porous took 14686.768 ms
+total took 19780.451 ms
+perfect took 5046.612 ms
+porous took 13746.409 ms
+total took 18793.021 ms
+
+int EXIT_TRACK_LIMIT = 16;
+int TUNNEL_FOLLOW_LENGTH = 16;
+int CHOKEPOINT_LAYER_LIMIT = 0;
+int TIME_WEIGHT = 120;
+
+=============
+(with a hardcoded queue implementation)
+perfect took 5115.486 ms
+porous took 13628.612 ms
+total took 18744.098 ms
+perfect took 5043.491 ms
+porous took 13392.792 ms
+total took 18436.282 ms
+
+int EXIT_TRACK_LIMIT = 16;
+int TUNNEL_FOLLOW_LENGTH = 16;
+int CHOKEPOINT_LAYER_LIMIT = 0;
+int TIME_WEIGHT = 120;
+
+=============
+(simple FILO queue)
+perfect took 6913.955 ms
+porous took 21280.412 ms
+total took 28194.367 ms
+
+int EXIT_TRACK_LIMIT = 16;
+int TUNNEL_FOLLOW_LENGTH = 16;
+int CHOKEPOINT_LAYER_LIMIT = 0;
+int TIME_WEIGHT = 120;
+
+=============
+
+
