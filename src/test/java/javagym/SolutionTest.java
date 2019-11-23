@@ -3,7 +3,6 @@ package javagym;
 import javax.annotation.Nonnull;
 
 import org.apache.commons.lang3.tuple.Pair;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import noedit.Cell;
@@ -602,7 +601,6 @@ public class SolutionTest {
         checkMazeSolution(puzzle.getLeft(), puzzle.getRight());
     }
 
-    @Disabled  //TODO @mark: TEMPORARY! REMOVE THIS!
     @Test
     void testPerformanceV2() {
         // Hint: Do not run in debug mode!
