@@ -150,6 +150,8 @@ public class Solution {
     @Nonnull
     @CheckReturnValue
     private Position[] findExplorable(@Nonnull Position position, @Nonnull Maze maze, @Nonnull VisitGrid grid) {
+
+        //TODO @mark: recycle arrays (thread-local)?
         Position[] neighbours = new Position[]{
                 position.nextStep(),
                 position.right(),
@@ -157,10 +159,26 @@ public class Solution {
                 position.left(),
                 position.up()
         };
-        return Arrays.stream(neighbours)
-                .filter(neighbour -> maze.getOrElse(neighbour, Wall) != Wall)
-                .filter(neighbour -> !grid.visited(neighbour))
-                .toArray(Position[]::new);
+        int matchCount = 0;
+        boolean[] isMatch = new boolean[5];
+        for (int i = 0; i < 5; i++) {
+            Position neighbour = neighbours[i];
+            if (maze.getOrElse(neighbour, Wall) != Wall && !grid.visited(neighbour)) {
+                isMatch[i] = true;
+                matchCount++;
+            }
+        }
+
+        int matchNr = 0;
+        Position[] explorable = new Position[matchCount];
+        for (int i = 0; i < 5; i++) {
+            if (isMatch[i]) {
+                explorable[matchNr] = neighbours[i];
+                matchNr += 1;
+            }
+        }
+        assert matchNr == matchCount;
+        return explorable;
     }
 
     /**
