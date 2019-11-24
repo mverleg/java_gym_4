@@ -182,5 +182,11 @@ int CHOKEPOINT_LAYER_LIMIT = 0;
 int TIME_WEIGHT = 120;
 
 =============
+perfect took 4297.082 ms
+porous took 10729.043 ms
+open took 3921.022 ms
+total took 18947.148 ms
+
+
 =============
 =============

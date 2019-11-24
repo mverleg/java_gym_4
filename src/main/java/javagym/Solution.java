@@ -34,6 +34,7 @@ public class Solution {
     private final ExecutorService threadPool = THREADING ? Executors.newFixedThreadPool(threadCount) : null;
 
     //TODO @mark: flamegraph
+    //TODO @mark: prevent allocations in loops
 
     @Nonnull
     @CheckReturnValue
@@ -74,7 +75,7 @@ public class Solution {
         if (THREADING) {
             solutionPath = solveThreaded(maze, grid, queue);
         } else {
-            solutionPath = work(maze, grid, queue);
+            solutionPath = solveMaze(maze, grid, queue);
         }
         return solutionPath;
     }
@@ -85,7 +86,7 @@ public class Solution {
         @SuppressWarnings("unchecked")
         Future<Path>[] solutions = new Future[threadCount];
         for (int w = 0; w < threadCount; w++) {
-            solutions[w] = threadPool.submit(() -> work(maze, grid, queue));
+            solutions[w] = threadPool.submit(() -> solveMaze(maze, grid, queue));
         }
         try {
             for (int w = 0; w < threadCount; w++) {
@@ -103,7 +104,7 @@ public class Solution {
 
     @Nullable
     @CheckReturnValue
-    private Path work(@Nonnull Maze maze, @Nonnull VisitGrid grid, @Nonnull PathQueue queue) {
+    private Path solveMaze(@Nonnull Maze maze, @Nonnull VisitGrid grid, @Nonnull PathQueue queue) {
 
         // Go through all the nodes until an exit is found.
         while (queue.isNotEmpty()) {
@@ -123,7 +124,6 @@ public class Solution {
                 // Pay attention that anything added to path must be 1) checked for exit and 2) marked as visited.
                 path.add(neighbour);
                 if (maze.get(neighbour) == Exit) {
-                    //System.out.println(grid.asText());  //TODO @mark: TEMPORARY! REMOVE THIS!
                     return path.build();
                 }
                 grid.mark(neighbour);
@@ -137,7 +137,6 @@ public class Solution {
                 // Pay attention that anything added to path must be 1) checked for exit and 2) marked as visited.
                 newPath.add(neighbour);
                 if (maze.get(neighbour) == Exit) {
-                    //System.out.println(grid.asText());  //TODO @mark: TEMPORARY! REMOVE THIS!
                     return newPath.build();
                 }
                 grid.mark(neighbour);
@@ -208,10 +207,23 @@ public class Solution {
     @CheckReturnValue
     @SuppressWarnings("SameParameterValue")
     private Position[] findExits(@Nonnull Maze maze, int maxCount) {
-        return maze.stream()
-                .filter(cell -> cell.getRight() == Exit)
-                .map(cell -> cell.getLeft())
-                .limit(maxCount)
-                .toArray(Position[]::new);
+        int foundCount = 0;
+        Position[] exits = new Position[Math.min(maxCount, maze.duration * maze.width * maze.height)];
+        for (int t = 0; t < maze.duration; t++) {
+            for (int x = 0; x < maze.width; x++) {
+                for (int y = 0; y < maze.height; y++) {
+                    if (maze.get(t,x , y) == Exit) {
+                        exits[foundCount] = Position.at(t, x, y);
+                        foundCount += 1;
+                    }
+                }
+            }
+        }
+        if (foundCount < maxCount) {
+            Position[] cropExits = new Position[foundCount];
+            System.arraycopy(exits, 0, cropExits, 0, foundCount);
+            exits = cropExits;
+        }
+        return exits;
     }
 }

@@ -15,9 +15,9 @@ public class Util {
 	 */
 	public static int dist(@Nonnull Position fromPoint, @Nonnull Position targetPoint) {
 		if (targetPoint.t >= fromPoint.t) {
-			return (targetPoint.x - fromPoint.x) * (targetPoint.x - fromPoint.x) +
-					(targetPoint.y - fromPoint.y) * (targetPoint.y - fromPoint.y) +
-					TIME_WEIGHT * (targetPoint.t - fromPoint.t) * TIME_WEIGHT * (targetPoint.t - fromPoint.t);
+			return Math.abs(targetPoint.x - fromPoint.x) +
+					Math.abs(targetPoint.y - fromPoint.y) +
+					TIME_WEIGHT * (targetPoint.t - fromPoint.t);
 		} else {
 			return Integer.MAX_VALUE;
 		}
