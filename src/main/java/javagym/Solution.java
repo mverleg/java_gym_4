@@ -227,12 +227,15 @@ public class Solution {
     private Position[] findExits(@Nonnull Maze maze, int maxCount) {
         int foundCount = 0;
         Position[] exits = new Position[Math.min(maxCount, maze.duration * maze.width * maze.height)];
-        for (int t = 0; t < maze.duration; t++) {
+        search: for (int t = 0; t < maze.duration; t++) {
             for (int x = 0; x < maze.width; x++) {
                 for (int y = 0; y < maze.height; y++) {
                     if (maze.get(t,x , y) == Exit) {
                         exits[foundCount] = Position.at(t, x, y);
                         foundCount += 1;
+                        if (foundCount >= maxCount) {
+                            break search;
+                        }
                     }
                 }
             }
