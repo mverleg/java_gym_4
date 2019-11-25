@@ -10,7 +10,6 @@ import javax.annotation.CheckReturnValue;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import org.apache.commons.lang3.Validate;
 import org.apache.commons.lang3.tuple.Pair;
 import org.checkerframework.checker.index.qual.NonNegative;
 import org.checkerframework.checker.index.qual.Positive;
@@ -43,9 +42,9 @@ public final class Maze implements Iterable<Pair<Position, Cell>> {
 	}
 
 	public Maze(@Nonnull Cell[][][] data) {
-		Validate.isTrue(data.length > 0, "first dimension of maze is empty");
-		Validate.isTrue(data[0].length > 0, "second dimension of maze is empty");
-		Validate.isTrue(data[0][0].length > 0, "third dimension of maze is empty");
+		assert data.length > 0: "first dimension of maze is empty";
+		assert data[0].length > 0: "second dimension of maze is empty";
+		assert data[0][0].length > 0: "third dimension of maze is empty";
 
 		this.duration = data.length;
 		this.width = data[0].length;
@@ -54,13 +53,13 @@ public final class Maze implements Iterable<Pair<Position, Cell>> {
 
 		// Check that the maze is square.
 		for (Cell[][] snapshot : data) {
-			Validate.isTrue(data[0].length == snapshot.length,
-					"Second dimensions of maze matrix aren't equal length (" + data[0].length + " vs " + snapshot.length + ")");
+			assert data[0].length == snapshot.length:
+					"Second dimensions of maze matrix aren't equal length (" + data[0].length + " vs " + snapshot.length + ")";
 			for (Cell[] row : snapshot) {
-				Validate.isTrue(data[0][0].length == row.length,
-						"Second dimensions of maze matrix aren't equal length (" + data[0][0].length + " vs " + row.length + ")");
+				assert data[0][0].length == row.length:
+						"Second dimensions of maze matrix aren't equal length (" + data[0][0].length + " vs " + row.length + ")";
 				for (Cell cell : row) {
-					Validate.notNull(cell);
+					assert cell != null;
 				}
 			}
 		}
@@ -73,9 +72,9 @@ public final class Maze implements Iterable<Pair<Position, Cell>> {
 			@NonNegative int x,
 			@NonNegative int y
 	) {
-		Validate.isTrue(t < duration, "'t' cannot exceed duration");
-		Validate.isTrue(x < width, "'x' cannot exceed width");
-		Validate.isTrue(y < height, "'y' cannot exceed height");
+		assert t < duration: "'t' cannot exceed duration";
+		assert x < width: "'x' cannot exceed width";
+		assert y < height: "'y' cannot exceed height";
 
 		return data[t][x][y];
 	}
@@ -112,7 +111,7 @@ public final class Maze implements Iterable<Pair<Position, Cell>> {
 	@Nonnull
 	@CheckReturnValue
 	public String asStringAt(@NonNegative int t) {
-		Validate.isTrue(t < duration, "'t' cannot exceed duration");
+		assert t < duration: "'t' cannot exceed duration";
 
 		StringBuilder text = new StringBuilder("step " + (t + 1) + " of " + duration + ":\n");
 		text.append("+");
@@ -146,7 +145,7 @@ public final class Maze implements Iterable<Pair<Position, Cell>> {
 	@Nonnull
 	@CheckReturnValue
 	public static Maze fromStrings(@Nonnull String[] textMazes) {
-		Validate.isTrue(textMazes.length > 0);
+		assert textMazes.length > 0;
 
 		// Iterate over snapshots.
 		Cell[][][] mazes = null;
@@ -155,23 +154,23 @@ public final class Maze implements Iterable<Pair<Position, Cell>> {
 
 			// Determine the shape and allocate memory.
 			String[] rows = snapshotText.split("\\r?\\n");
-			Validate.isTrue(rows.length > 0);
+			assert rows.length > 0;
 			final int columnCount = rows[0].length();
 			Cell[][] snapshotMaze = new Cell[columnCount][rows.length];
 			if (mazes == null) {
 				mazes = new Cell[textMazes.length][columnCount][rows.length];
 			} else {
-				Validate.isTrue(mazes[0].length == snapshotMaze.length && mazes[0][0].length == snapshotMaze[0].length,
+				assert mazes[0].length == snapshotMaze.length && mazes[0][0].length == snapshotMaze[0].length:
 						"Initial maze was " + mazes[0].length + " x " + mazes[0][0].length +
-								", but later one is " +  + snapshotMaze.length + " x " + snapshotMaze[0].length);
+								", but later one is " +  + snapshotMaze.length + " x " + snapshotMaze[0].length;
 			}
 			mazes[stepNr] = snapshotMaze;
 
 			// Parse the cells one by one.
 			for (int rowNr = 0; rowNr < rows.length; rowNr++) {
 				String row = rows[rowNr];
-				Validate.isTrue(row.length() == columnCount, "Text maze is not square; " +
-						"first row has " + columnCount + " cells, but a later row has " + row.length());
+				assert row.length() == columnCount: "Text maze is not square; " +
+						"first row has " + columnCount + " cells, but a later row has " + row.length();
 				for (int colNr = 0; colNr < columnCount; colNr++) {
 					char letter = row.charAt(colNr);
 					Cell cell = Cell.parse(letter);

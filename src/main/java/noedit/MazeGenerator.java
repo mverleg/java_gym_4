@@ -8,7 +8,6 @@ import java.util.Stack;
 import javax.annotation.CheckReturnValue;
 import javax.annotation.Nonnull;
 
-import org.apache.commons.lang3.Validate;
 import org.apache.commons.lang3.tuple.Pair;
 import org.checkerframework.checker.index.qual.Positive;
 
@@ -52,11 +51,11 @@ public final class MazeGenerator {
 			@Positive int exitCount
 	) {
 		//noinspection ConstantConditions
-		Validate.isTrue(duration >= 1);
-		Validate.isTrue(circumference >= 4);
-		Validate.isTrue(porosity >= 0 && porosity < 1);
+		assert duration >= 1;
+		assert circumference >= 4;
+		assert porosity >= 0 && porosity < 1;
 		//noinspection ConstantConditions
-		Validate.isTrue(exitCount > 0 && exitCount <= circumference);
+		assert exitCount > 0 && exitCount <= circumference;
 
 		Random rand = new Random(seed);
 		int width = Math.max((int) Math.ceil((rand.nextDouble() * 0.8 + 0.1) * circumference), 2);
@@ -79,7 +78,7 @@ public final class MazeGenerator {
 					rand.nextInt(width),
 					rand.nextInt(height)
 			);
-			Validate.isTrue(maze[2 * t][2 * layerPos.x][2 * layerPos.y] != Wall);
+			assert maze[2 * t][2 * layerPos.x][2 * layerPos.y] != Wall;
 			maze[2 * t + 1] = makePorous(
 					generateWallLayer(width, height),
 					porosity, rand);

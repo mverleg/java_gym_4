@@ -40,8 +40,8 @@ public class Solution {
     @CheckReturnValue
     public Path solve(@Nonnull Maze maze, @Nonnull Position initialPosition) {
 
-        Validate.isTrue(Wall != maze.get(initialPosition),
-                "Started inside a wall; this should never happen");
+        assert Wall != maze.get(initialPosition):
+                "Started inside a wall; this should never happen";
 
         // First find the exits, if there aren't too many.
         Position[] targets = new Position[0];

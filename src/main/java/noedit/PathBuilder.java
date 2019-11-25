@@ -7,8 +7,6 @@ import javax.annotation.CheckReturnValue;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import org.apache.commons.lang3.Validate;
-
 import com.google.errorprone.annotations.CanIgnoreReturnValue;
 
 /**
@@ -99,10 +97,11 @@ public class PathBuilder implements Cloneable {
 		}
 		Node current = latest;
 		for (int i = length - 1; i >= 0; i--) {
-			steps.set(i, Validate.notNull(current).position);
+			assert current != null;
+			steps.set(i, current.position);
 			current = current.previous;
 		}
-		Validate.isTrue(current == null);
+		assert current == null;
 		return new Path(steps);
 	}
 
